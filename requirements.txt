@@ -1,0 +1,6 @@
+certifi==2019.11.28
+importlib-metadata==1.2.0
+inflect==3.0.2
+more-itertools==8.0.2
+wincertstore==0.2
+zipp==0.6.0
