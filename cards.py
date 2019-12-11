@@ -231,6 +231,7 @@ def str_hand_comparison(poker_hands):
             for kicker in poker_hand.kickers:
                 if str(kicker) not in str_printed_cards:
                     poker_hand_str += f'\n(- {str(kicker)})'
+        poker_hand_str += f'\n'
 
     print_string = delimiter + "\n" + win_statement + poker_hand_str + delimiter
     return print_string
