@@ -10,9 +10,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-##### Python (>3.5)
+##### Python (>3.6)
 
-Make sure you have a recent version (>3.5) of [python](https://www.python.org/) installed. 
+Make sure you have a recent version (>3.6) of [python](https://www.python.org/) installed. 
 
 If running on Windows, the following examples expect that python is included in the [PATH system variable](https://superuser.com/questions/143119/how-do-i-add-python-to-the-windows-path).
 
