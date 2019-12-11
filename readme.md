@@ -1,87 +1,67 @@
-# Project Title
+# Cards
 
-One Paragraph of project description goes here
+Analyses the results of a random poker game. The results are printed to **analysis.txt.**
+
+The game is played with the following settings: _"Three players each receive a random 5-card poker hand picked from a single deck."_ 
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+##### Python (>3.5)
+
+Make sure you have a recent version (>3.5) of [python](https://www.python.org/) installed. 
+
+If running on Windows, the following examples expect that python is included in the [PATH system variable](https://superuser.com/questions/143119/how-do-i-add-python-to-the-windows-path).
+
+It is recommended to use a virtual environment to manage conflicts with package requirements. Create a virtual environment to your preferred location, e.g. as a subfolder to where you want to run the program from.
 
 ```
-Give examples
+python3 -m venv /path/to/new/virtual/environment
 ```
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
+##### Unzip
+Make sure the contents of the cards.zip are unzipped to the location this program is to be run from.
 
-Say what the step will be
+##### Requirements.txt
+Install the requirements in the **requirements.txt** using e.g. the pip package manager of the virtual environment.
 
+1. **Activate virtual environment**
 ```
-Give the example
-```
-
-And repeat
-
-```
-until finished
+/path/to/new/virtual/environment/Scripts/activate
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+2. **Use pip to install requirements.txt**
+
+```
+pip install -r /path/to/program/requirements.txt 
+```
+
+##### Test the program by running it
+
+```
+python3 /path/to/program/run.py
+```
+If the analysis.txt file was updated with a new date (and simulation), you're good to go!
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+The program includes a number simple tests. These only cover a part of the card handling and hand ordering functions' outputs, and are likely to prove useful only in case of further development. 
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+The tests are found under the ```simple_tests()``` function in the cards.py file. These can be run e.g. as follows using a python console run from the program folder:
+```python
+from cards import simple_tests
+simple_tests()
 ```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Oliver Heinonen** - *Initial work* - [olivhe](https://github.com/olivhe)
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
