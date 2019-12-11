@@ -460,7 +460,12 @@ class HandOfCards:
 
 
 def simple_tests():
-    """Runs simple tests covering some specific failures"""
+    """Runs simple tests covering some specific failures
+
+    The sub-tests return True if successful, False if not.
+    The failures are printed with print().
+
+    """
     test_hand_cards = [
         # Royal Flush
         [Card(1, "club"), Card(13, "club"), Card(12, "club"), Card(11, "club"), Card(10, "club")],
@@ -508,31 +513,43 @@ def simple_tests():
     poker_hands = [HandOfCards(test_cards=x).poker_hand for x in test_hand_cards]
     poker_hands2 = [HandOfCards(test_cards=x).poker_hand for x in test_hands_2]
 
+    #
+
     def test_for_hand_recognition():
         for hand_index, poker_hand in enumerate(poker_hands):
             if str(poker_hand) != test_hands[hand_index]:
                 print(f"Hand recognition test failed at test hand # {hand_index+1}")
+                return False
+        return True
 
     def test_for_general_hand_comparison():
         first_str_line = str_hand_comparison(poker_hands).split("\n")[2]
         if first_str_line != "The first hand wins with Royal Flush.":
             print(f"General hand comparison test failed!")
+            return False
+        return True
 
     def test_for_draw_recognition_with_only_high_cards():
         first_str_line = str_hand_comparison(poker_hands[-2:]).split("\n")[2]
         if first_str_line != "Draw between the 1st and 2nd hand (Ace high)":
             print(f"Draw recognition test failed!")
+            return False
+        return True
 
     def test_for_reporting_of_non_kicker_cards_with_same_high_cards():
         first_str_line = str_hand_comparison(poker_hands[-3:-1]).split("\n")[10]
         if first_str_line != "(- 7 of hearts)":
             print(f"High card kicker reporting test failed!")
+            return False
+        return True
 
     def test_for_reporting_of_kicker_cards_with_flushes():
         two_flushes = [poker_hands[4], poker_hands2[0]]
         ninth_str_line = str_hand_comparison(two_flushes).split("\n")[9]
         if ninth_str_line != " - 7 of clubs (kicker)":
             print(f"Flush kicker reporting test failed!")
+            return False
+        return True
 
     def test_for_reporting_of_extra_cards_with_a_pair():
         pair_and_high = [HandOfCards(test_cards=test_hands_2[1]).poker_hand,
@@ -540,17 +557,23 @@ def simple_tests():
         ninth_str_line = str_hand_comparison(pair_and_high).split("\n")[9]
         if ninth_str_line != "(- Jack of spades)":
             print(f"Pair extra card reporting test failed!")
+            return False
+        return True
 
     def test_for_reporting_of_extra_cards_with_a_three_of_kind():
         pair_three_and_highs = [poker_hands[-3], poker_hands[6], poker_hands2[1]]
         ninth_str_line = str_hand_comparison(pair_three_and_highs).split("\n")[18]
         if ninth_str_line != "(- Jack of hearts)":
             print(f"Three of kind extra card reporting test failed!")
+            return False
+        return True
 
-    test_for_hand_recognition()
-    test_for_general_hand_comparison()
-    test_for_draw_recognition_with_only_high_cards()
-    test_for_reporting_of_non_kicker_cards_with_same_high_cards()
-    test_for_reporting_of_kicker_cards_with_flushes()
-    test_for_reporting_of_extra_cards_with_a_pair()
-    test_for_reporting_of_extra_cards_with_a_three_of_kind()
+    results = [test_for_hand_recognition(),
+               test_for_general_hand_comparison(),
+               test_for_draw_recognition_with_only_high_cards(),
+               test_for_reporting_of_non_kicker_cards_with_same_high_cards(),
+               test_for_reporting_of_kicker_cards_with_flushes(),
+               test_for_reporting_of_extra_cards_with_a_pair(),
+               test_for_reporting_of_extra_cards_with_a_three_of_kind()]
+    passed_int = len([x for x in results if x is True])
+    print(f'{passed_int} out of {len(results)} tests passed.')

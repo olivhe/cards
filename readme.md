@@ -41,22 +41,25 @@ Install the requirements in the **requirements.txt** using e.g. the pip package 
 pip install -r /path/to/program/requirements.txt 
 ```
 
-##### Test the program by running it
+## Run the program
 
+Run the ```run.py``` file in the program folder using the virtual python environment.
 ```
 python3 /path/to/program/run.py
 ```
-If the analysis.txt file was updated with a new date (and simulation), you're good to go!
+This updates the **analysis.txt** file with a new simulation (and date).
 
 ## Running the tests
 
 The program includes a number simple tests. These only cover a part of the card handling and hand ordering functions' outputs, and are likely to prove useful only in case of further development. 
 
-The tests are found under the ```simple_tests()``` function in the cards.py file. These can be run e.g. as follows using a python console run from the program folder:
+The tests are found under the ```simple_tests``` function in the cards.py file. These can be run e.g. as follows using a python console run from the program folder:
 ```python
 from cards import simple_tests
 simple_tests()
 ```
+
+The test results are reported in the console using python's built-in ```print``` function.
 
 ## Authors
 

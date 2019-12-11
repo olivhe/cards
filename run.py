@@ -23,4 +23,4 @@ analysis_file.write("\n'Three players each receive a random 5-card poker hand pi
 analysis_file.write(analysis_printable)
 analysis_file.close()
 
-print("An analysis from a new poker hand simulation saved in analysis.txt.")
+print("An analysis from a new poker hand simulation was saved in analysis.txt.")
