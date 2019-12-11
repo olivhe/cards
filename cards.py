@@ -61,25 +61,25 @@ def order_hands(hand_list):
 
     Returns:
         winning_hand (PokerHand): The best PokerHand given in hand_list
-        high_index (int): The index of the high_card used to determine the best hand; often 0
+        kicker_index (int): The index of the kicker used to determine the best hand; often 0
 
     """
     def sort_by_high_cards(hands_to_sort):
         # Assume high cards to be in order from highest to lowest points
         def sort_term(hand):
             sort_list = []
-            for high_card in hand.high_cards:
-                sort_list.append(high_card.points)
+            for kicker in hand.kickers:
+                sort_list.append(kicker.points)
             return tuple(sort_list)
-        high_cards_sorted = sorted(hands_to_sort, key=lambda hand: sort_term(hand), reverse=True)
-        determining_high_index = -1  # Stays -1 if it's a draw
-        for card_index, high_card in enumerate(high_cards_sorted[0].high_cards):
-            if high_cards_sorted[1].high_cards[card_index].points != high_card.points:
-                determining_high_index = card_index + 1
+        kickers_sorted = sorted(hands_to_sort, key=lambda hand: sort_term(hand), reverse=True)
+        determining_kicker_index = -1  # Stays -1 if it's a draw
+        for card_index, kicker in enumerate(kickers_sorted[0].kickers):
+            if kickers_sorted[1].kickers[card_index].points != kicker.points:
+                determining_kicker_index = card_index + 1
                 break
-        return high_cards_sorted, determining_high_index
+        return kickers_sorted, determining_kicker_index
 
-    high_index = -2  # Stays -2 unless high cards are needed to make a difference
+    kicker_index = -2  # Stays -2 unless high cards are needed to make a difference
     # First sort and filter the list to contain only the highest hand scores on the list
     sorted_hands = sorted(hand_list, key=lambda x: x.score[0], reverse=True)
     highest_hands = list(filter(lambda x: x.score[0] == sorted_hands[0].score[0], sorted_hands))
@@ -89,27 +89,27 @@ def order_hands(hand_list):
         if len(sorted_high_hands) > 1:
             if sorted_high_hands[0].score[1][0] == sorted_high_hands[1].score[1][0]:
                 if sorted_high_hands[0].score[1][1] == sorted_high_hands[1].score[1][1]:
-                    # The secondary scoring was the same, so we check the high cards.
-                    # The high cards can only score with flushes, threes of a kind, pairs, and two pairs
+                    # The secondary scoring was the same, so we check the kickers.
+                    # Kickers can only score with flushes, threes of a kind, pairs, and two pairs
                     filtered_hands = list(filter(lambda x: (x.score[1][0] == sorted_high_hands[0].score[1][0],
                                                             x.score[1][1] == sorted_high_hands[0].score[1][1]),
                                                  sorted_high_hands))
-                    sorted_high_hands, high_index = sort_by_high_cards(filtered_hands)
+                    sorted_high_hands, kicker_index = sort_by_high_cards(filtered_hands)
     else:  # Expects int
         sorted_high_hands = sorted(highest_hands, key=lambda x: x.score[1], reverse=True)
         if len(sorted_high_hands) > 1:
             if sorted_high_hands[0].score[1] == sorted_high_hands[1].score[1]:
-                # The secondary scoring was the same, so we check the high cards.
-                # The high cards can only score with flushes, threes of a kind, pairs, and two pairs
+                # The secondary scoring was the same, so we check the kickers.
+                # Kickers can only score with flushes, threes of a kind, pairs, and two pairs
                 filtered_hands = list(filter(lambda x: x.score[1] == sorted_high_hands[0].score[1],
                                              sorted_high_hands))
-                sorted_high_hands, high_index = sort_by_high_cards(filtered_hands)
+                sorted_high_hands, kicker_index = sort_by_high_cards(filtered_hands)
     # The last thing we need to check is if it's a draw.
     if len(sorted_high_hands) > 1:
         if sorted_high_hands[0]:
             pass
     winning_hand = sorted_high_hands[0]
-    return winning_hand, high_index
+    return winning_hand, kicker_index
 
 
 def str_hand_comparison(poker_hands):
@@ -141,26 +141,26 @@ def str_hand_comparison(poker_hands):
             ...
 
     Raises:
-        ValueError: The high_det signifies a draw, but no equal hands to the best hand were found
-        ValueError: The high_det signifies a difference by high_cards, but found no equal primary hand
+        ValueError: The kicker_det signifies a draw, but no equal hands to the best hand were found
+        ValueError: The kicker_det signifies a difference by kickers, but found no equal primary hand
 
-        high_det is defined by order_hands(poker_hands)
+        kicker_det is defined by order_hands(poker_hands)
 
     """
-    best_hand, high_det = order_hands(poker_hands)
+    best_hand, kicker_det = order_hands(poker_hands)
     p = inflect.engine()
     best_index = None
     best_indices = []
     # List the indices of the winning hands and form the win statement
-    if high_det != -1:  # One winner
+    if kicker_det != -1:  # One winner
         for hand_index, poker_hand in enumerate(poker_hands):
             if poker_hand.description == best_hand.description:
-                if high_det > -1:
-                    high_card_points = [high_card.points for high_card in poker_hand.high_cards]
-                    for best_high in best_hand.high_cards:
-                        if best_high.points in high_card_points:
-                            high_card_points.pop(high_card_points.index(best_high.points))
-                    if len(high_card_points) == 0:
+                if kicker_det > -1:
+                    kicker_points = [kicker.points for kicker in poker_hand.kickers]
+                    for best_kicker in best_hand.kickers:
+                        if best_kicker.points in kicker_points:
+                            kicker_points.pop(kicker_points.index(best_kicker.points))
+                    if len(kicker_points) == 0:
                         best_index = hand_index
                     else:
                         pass
@@ -171,27 +171,27 @@ def str_hand_comparison(poker_hands):
         # It's a draw, so we need to know how which hands are the same
         for hand_index, poker_hand in enumerate(poker_hands):
             if poker_hand.description == best_hand.description:
-                high_card_points = [high_card.points for high_card in poker_hand.high_cards]
-                for best_high in best_hand.high_cards:
-                    if best_high.points in high_card_points:
-                        high_card_points.pop(high_card_points.index(best_high.points))
-                if len(high_card_points) == 0:
+                kicker_points = [high_card.points for high_card in poker_hand.kickers]
+                for best_kicker in best_hand.kickers:
+                    if best_kicker.points in kicker_points:
+                        kicker_points.pop(kicker_points.index(best_kicker.points))
+                if len(kicker_points) == 0:
                     best_indices.append(hand_index)
                 else:
                     pass
         if len(best_indices) < 2:
-            raise ValueError("The high_det signifies a draw, but no equal hands to the best hand were found")
+            raise ValueError("The kicker_det signifies a draw, but no equal hands to the best hand were found")
         readable_indices = [p.ordinal(index+1) for index in best_indices]
         draw_str = p.join(readable_indices)
         win_statement = f"Draw between the {draw_str} hand ({str(best_hand)})"
 
-    if high_det > -1:
+    if kicker_det > -1:
         # Winner with high cards, index the hands where the high cards make a difference
         for hand_index, poker_hand in enumerate(poker_hands):
             if poker_hand.description == best_hand.description:
                 best_indices.append(hand_index)
         if len(best_indices) < 2:
-            raise ValueError("The high_det signifies a difference by high_cards, but found no equal primary hand")
+            raise ValueError("The kicker_det signifies a difference by kickers, but found no equal primary hand")
 
     # Form the string that includes the info from the single hands
     poker_hand_str = ""
@@ -202,33 +202,33 @@ def str_hand_comparison(poker_hands):
         poker_hand_str += f'\n{p.ordinal(hand_index+1)} hand: {str(poker_hand)}'
         if hand_index == best_index:
             poker_hand_str += "\nWinning hand"
-        elif hand_index in best_indices and high_det is -1:
+        elif hand_index in best_indices and kicker_det is -1:
             poker_hand_str += "\nHand included in the winning draw"
         poker_hand_str += "\nThe hand includes the following cards:"
         # Include main cards in the poker_hand
         for hand_card in poker_hand.hand_cards:
-            high_str = ""
-            if hand_index in best_indices and high_det > -1:
+            kicker_str = ""
+            if hand_index in best_indices and kicker_det > -1:
                 # Include the kicker tag if the card plays a double role in the main hand and as a kicker
-                if str(hand_card) in [str(high_card) for high_card in poker_hand.high_cards[0:high_det]]:
-                    high_str = ' (kicker)'
-            poker_hand_str += f'\n - {str(hand_card)}{high_str}'
+                if str(hand_card) in [str(kicker) for kicker in poker_hand.kickers[0:kicker_det]]:
+                    kicker_str = ' (kicker)'
+            poker_hand_str += f'\n - {str(hand_card)}{kicker_str}'
             str_printed_cards.append(str(hand_card))
         # Then include the rest of the kicker cards
-        if hand_index in best_indices and high_det > -2:
+        if hand_index in best_indices and kicker_det > -2:
             # This makes sure that the kicker tags are printed ->
             # also when the case is a draw with all kickers counted before determining the draw
-            if high_det == -1:
-                high_det = len(poker_hand.high_cards) + 1
-            for high_card in poker_hand.high_cards[0:high_det]:
-                if str(high_card) not in str_printed_cards:
-                    poker_hand_str += f'\n - {str(high_card)} (kicker)'
-                    str_printed_cards.append(str(high_card))
+            if kicker_det == -1:
+                kicker_det = len(poker_hand.kickers) + 1
+            for kicker in poker_hand.kickers[0:kicker_det]:
+                if str(kicker) not in str_printed_cards:
+                    poker_hand_str += f'\n - {str(kicker)} (kicker)'
+                    str_printed_cards.append(str(kicker))
         # Last include the cards that do not contribute
-        if poker_hand.high_cards:
-            for high_card in poker_hand.high_cards:
-                if str(high_card) not in str_printed_cards:
-                    poker_hand_str += f'\n(- {str(high_card)})'
+        if poker_hand.kickers:
+            for kicker in poker_hand.kickers:
+                if str(kicker) not in str_printed_cards:
+                    poker_hand_str += f'\n(- {str(kicker)})'
 
     print_string = delimiter + "\n" + win_statement + poker_hand_str + delimiter
     return print_string
@@ -274,15 +274,15 @@ class PokerHand:
             First int determines relative weighing of hands (1-10),
             second int or tuple points out the highest or determining card or cards of the hand
         hand_cards (list): Hand cards include the primary scoring cards
-        high_cards (list): High cards are for secondary scoring; if more than one hand has the same primary cards
+        kickers (list): High cards are for secondary scoring; if more than one hand has the same primary cards
         sub_hands (list): Sub_hands contain lesser hands, when the hand is formed from a combination of hands
 
     """
-    def __init__(self, desc, score, hand_cards, high_cards, sub_hands=None):
+    def __init__(self, desc, score, hand_cards, kickers, sub_hands=None):
         self.description = desc
         self.score = score
         self.hand_cards = hand_cards
-        self.high_cards = high_cards
+        self.kickers = kickers
         self.sub_hands = sub_hands
 
     def __str__(self):
@@ -338,12 +338,12 @@ class HandOfCards:
                     for temp_index in sorted(hand_card_temp_indices, reverse=True):
                         hand_cards.append(uncounted_cards.pop(temp_index))
 
-                    temp_high_cards = copy.deepcopy(self.cards)
+                    temp_kickers = copy.deepcopy(self.cards)
                     for hand_card in hand_cards:
-                        for high_card_index, high_card in enumerate(temp_high_cards):
-                            if str(hand_card) == str(high_card):
-                                temp_high_cards.pop(high_card_index)
-                    high_cards = sorted(temp_high_cards, key=lambda x: x.number, reverse=True)
+                        for high_card_index, kicker in enumerate(temp_kickers):
+                            if str(hand_card) == str(kicker):
+                                temp_kickers.pop(high_card_index)
+                    kickers = sorted(temp_kickers, key=lambda x: x.number, reverse=True)
 
                     if len(hand_cards) == 5:
                         raise ValueError("Five of a kind? You've implemented picking from multiple decks?")
@@ -361,7 +361,7 @@ class HandOfCards:
                         score = (1, card.points)
                     else:
                         continue
-                    poker_hand = PokerHand(desc=hand_desc, score=score, hand_cards=hand_cards, high_cards=high_cards)
+                    poker_hand = PokerHand(desc=hand_desc, score=score, hand_cards=hand_cards, kickers=kickers)
                     # TODO print(poker_hand)
                     hand_candidates.append(poker_hand)
 
@@ -376,7 +376,7 @@ class HandOfCards:
             if flush:
                 hand_desc = f'Flush, {suit_comparison}s'
                 score = (6, self.cards[0].points)
-                poker_hand = PokerHand(desc=hand_desc, score=score, hand_cards=self.cards, high_cards=self.cards)
+                poker_hand = PokerHand(desc=hand_desc, score=score, hand_cards=self.cards, kickers=self.cards)
                 hand_candidates.append(poker_hand)
 
         def analyse_straight():
@@ -404,7 +404,7 @@ class HandOfCards:
                 else:
                     hand_desc = f'Straight, {num_conv(self.cards[-1].points)} to {num_conv(self.cards[0].points)}'
                     score = (5, self.cards[0].points)
-                poker_hand = PokerHand(desc=hand_desc, score=score, hand_cards=self.cards, high_cards=None)
+                poker_hand = PokerHand(desc=hand_desc, score=score, hand_cards=self.cards, kickers=None)
                 hand_candidates.append(poker_hand)
 
         def analyse_combination_hands():
@@ -421,7 +421,7 @@ class HandOfCards:
                 hand_cards = pairs[0].hand_cards + pairs[1].hand_cards  # In order, higher pair first
                 for card in self.cards:
                     if str(card) not in [str(x) for x in hand_cards]:
-                        high_cards = [card]
+                        kickers = [card]
                 score = (3, (pairs[0].score[1], pairs[1].score[1]))
                 sub_hands = pairs
             elif len(threes_of_kind) == 1 and len(pairs) == 1:
@@ -429,7 +429,7 @@ class HandOfCards:
                             f'{num_conv(threes_of_kind[0].score[1], plural=True)} and ' \
                             f'{num_conv(pairs[0].score[1], plural=True)}'
                 hand_cards = threes_of_kind[0].hand_cards + pairs[0].hand_cards
-                high_cards = None
+                kickers = None
                 score = (7, (threes_of_kind[0].score[1], pairs[0].score[1]))
                 sub_hands = [threes_of_kind[0], pairs[0]]
             elif len(straights) == 1 and len(flushes) == 1:
@@ -440,12 +440,12 @@ class HandOfCards:
                     hand_desc = f'{straight_desc_parts[0]} Flush,{straight_desc_parts[1]}'
                 score = (9, straights[0].score[1])
                 hand_cards = self.cards
-                high_cards = None
+                kickers = None
                 sub_hands = [flushes[0], straights[0]]
             else:
                 return
             poker_hand = PokerHand(desc=hand_desc, score=score,
-                                   hand_cards=hand_cards, high_cards=high_cards,
+                                   hand_cards=hand_cards, kickers=kickers,
                                    sub_hands=sub_hands)
             hand_candidates.append(poker_hand)
 
