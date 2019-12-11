@@ -7,7 +7,10 @@ the results then analysed - both the hand and a number of hands.
 The results can be printed to a longer string for reporting using the
 str_hand_comparison function.
 
-The module also includes simple tests that cover some of the functions.
+The program includes a number simple tests. These only cover a part of the
+card handling and hand ordering functions' outputs, and are likely to prove
+useful only in case of further development.
+
 
   Typical usage example:
 
@@ -68,8 +71,8 @@ def order_hands(hand_list):
         # Assume high cards to be in order from highest to lowest points
         def sort_term(hand):
             sort_list = []
-            for kicker in hand.kickers:
-                sort_list.append(kicker.points)
+            for kicker_card in hand.kickers:
+                sort_list.append(kicker_card.points)
             return tuple(sort_list)
         kickers_sorted = sorted(hands_to_sort, key=lambda hand: sort_term(hand), reverse=True)
         determining_kicker_index = -1  # Stays -1 if it's a draw
@@ -82,7 +85,7 @@ def order_hands(hand_list):
     kicker_index = -2  # Stays -2 unless high cards are needed to make a difference
     # First sort and filter the list to contain only the highest hand scores on the list
     sorted_hands = sorted(hand_list, key=lambda x: x.score[0], reverse=True)
-    highest_hands = list(filter(lambda x: x.score[0] == sorted_hands[0].score[0], sorted_hands))
+    highest_hands = [x for x in sorted_hands if x.score[0] == sorted_hands[0].score[0]]
     # Depending on the type of the secondary compare term order the cards with the best primary hand scores
     if isinstance(highest_hands[0].score[1], tuple):
         sorted_high_hands = sorted(highest_hands, key=lambda x: (x.score[1][0], x.score[1][1]), reverse=True)
@@ -101,8 +104,7 @@ def order_hands(hand_list):
             if sorted_high_hands[0].score[1] == sorted_high_hands[1].score[1]:
                 # The secondary scoring was the same, so we check the kickers.
                 # Kickers can only score with flushes, threes of a kind, pairs, and two pairs
-                filtered_hands = list(filter(lambda x: x.score[1] == sorted_high_hands[0].score[1],
-                                             sorted_high_hands))
+                filtered_hands = [x for x in sorted_high_hands if x.score[1] == sorted_high_hands[0].score[1]]
                 sorted_high_hands, kicker_index = sort_by_high_cards(filtered_hands)
     # The last thing we need to check is if it's a draw.
     if len(sorted_high_hands) > 1:
@@ -316,7 +318,7 @@ class HandOfCards:
     def analyse_poker_hand(self):
         """Analyse the highest-scoring poker hand in the hand
 
-        Each sub-function analyzes a certain sub-category of poker hands.
+        Each sub-function analyzes a sub-category of poker hands reflected in function names.
 
         Returns:
             The PokerHand object which scores the highest and can be created from the cards in hand
@@ -324,7 +326,7 @@ class HandOfCards:
         """
         hand_candidates = []
 
-        def count_same_numbers():
+        def analyse_same_number_hands():
             """Determines high cards, pairs, threes and fours of a kind"""
             uncounted_cards = copy.deepcopy(self.cards)
             for card in self.cards:
@@ -362,7 +364,6 @@ class HandOfCards:
                     else:
                         continue
                     poker_hand = PokerHand(desc=hand_desc, score=score, hand_cards=hand_cards, kickers=kickers)
-                    # TODO print(poker_hand)
                     hand_candidates.append(poker_hand)
 
         def analyse_flush():
@@ -409,10 +410,11 @@ class HandOfCards:
 
         def analyse_combination_hands():
             """Analyses hands consisting of lower-scoring sub-hands, e.g. Straight FLush, Two Pairs"""
-            pairs = list(filter(lambda x: x.score[0] == 2, hand_candidates))
-            threes_of_kind = list(filter(lambda x: x.score[0] == 4, hand_candidates))
-            straights = list(filter(lambda x: x.score[0] == 5, hand_candidates))
-            flushes = list(filter(lambda x: x.score[0] == 6, hand_candidates))
+            pairs = [x for x in hand_candidates if x.score[0] == 2]
+            threes_of_kind = [x for x in hand_candidates if x.score[0] == 4]
+            straights = [x for x in hand_candidates if x.score[0] == 5]
+            flushes = [x for x in hand_candidates if x.score[0] == 6]
+            kickers = []
             if len(pairs) == 2:
                 pairs.sort(key=lambda x: x.score[1], reverse=True)
                 hand_desc = f'Two pairs, ' \
@@ -449,7 +451,7 @@ class HandOfCards:
                                    sub_hands=sub_hands)
             hand_candidates.append(poker_hand)
 
-        count_same_numbers()
+        analyse_same_number_hands()
         analyse_flush()
         analyse_straight()
         analyse_combination_hands()
