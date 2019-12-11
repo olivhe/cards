@@ -1,36 +1,36 @@
-POKER GAME ANALYSIS - 2019-12-11-15:32:58
+POKER GAME ANALYSIS - 2019-12-11-15:36:45
 
 This file contains the analysis of a poker game, played with the following settings:
 'Three players each receive a random 5-card poker hand picked from a single deck.'
 
 -<>-<>-<>-<>-<>-<>-<>-<>-
-The third hand wins with Pair, 10s.
+The third hand wins with Two pairs, 9s and 4s.
 -<>-<>-<>-<>-<>-<>-<>-<>-
-1st hand: King high
+1st hand: Pair, 8s
 The hand includes the following cards:
- - King of clubs
-(- Queen of clubs)
-(- Jack of hearts)
+ - 8 of diamonds
+ - 8 of spades
 (- 7 of hearts)
-(- 2 of clubs)
+(- 6 of diamonds)
+(- Ace of spades)
 
 -<>-<>-<>-<>-<>-<>-<>-<>-
-2nd hand: Pair, 5s
+2nd hand: Pair, 7s
 The hand includes the following cards:
- - 5 of clubs
- - 5 of hearts
-(- 10 of clubs)
-(- 6 of hearts)
-(- 4 of hearts)
+ - 7 of clubs
+ - 7 of diamonds
+(- King of clubs)
+(- 10 of diamonds)
+(- 6 of spades)
 
 -<>-<>-<>-<>-<>-<>-<>-<>-
-3rd hand: Pair, 10s
+3rd hand: Two pairs, 9s and 4s
 Winning hand
 The hand includes the following cards:
- - 10 of spades
- - 10 of diamonds
-(- 9 of clubs)
-(- 7 of spades)
-(- 5 of diamonds)
+ - 9 of hearts
+ - 9 of clubs
+ - 4 of diamonds
+ - 4 of clubs
+(- Jack of spades)
 
 -<>-<>-<>-<>-<>-<>-<>-<>-

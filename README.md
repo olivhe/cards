@@ -16,7 +16,7 @@ Make sure you have a recent version (>3.6) of [python](https://www.python.org/) 
 
 If running on Windows, the following examples expect that python is included in the [PATH system variable](https://superuser.com/questions/143119/how-do-i-add-python-to-the-windows-path).
 
-It is recommended to use a virtual environment to manage conflicts with package requirements. Create a virtual environment to your preferred location, e.g. as a subfolder to where you want to run the program from.
+It is recommended to use a virtual environment to manage conflicts with package requirements. Create a virtual environment to your preferred location, e.g. as a subfolder of where you want to run the program from.
 
 ```
 python3 -m venv /path/to/new/virtual/environment
@@ -25,12 +25,12 @@ python3 -m venv /path/to/new/virtual/environment
 ### Installing
 
 ##### Unzip
-Make sure the contents of the cards.zip are unzipped to the location this program is to be run from.
+Make sure the contents of **pokerhandanalyzer-oliver.heinonen.zip** are unzipped to the location this program is to be run from.
 
 ##### Requirements.txt
-Install the requirements in the **requirements.txt** using e.g. the pip package manager of the virtual environment.
+Install the requirements from the **requirements.txt** using e.g. the pip package manager of the virtual environment.
 
-1. **Activate virtual environment**
+1. **Activate virtual environment** (on Windows)
 ```
 /path/to/new/virtual/environment/Scripts/activate
 ```
@@ -43,7 +43,7 @@ pip install -r /path/to/program/requirements.txt
 
 ## Run the program
 
-Run the ```run.py``` file in the program folder using the virtual python environment.
+Run the ```run.py``` file in the program folder using the python virtual environment.
 ```
 python3 /path/to/program/run.py
 ```
@@ -53,7 +53,7 @@ This updates the **analysis.txt** file with a new simulation (and date).
 
 The program includes a number simple tests. These only cover a part of the card handling and hand ordering functions' outputs, and are likely to prove useful only in case of further development. 
 
-The tests are found under the ```simple_tests``` function in the cards.py file. These can be run e.g. as follows using a python console run from the program folder:
+The tests are found under the ```simple_tests``` function in the cards.py file. These can be run e.g. as follows using a python console run in the program folder:
 ```python
 from cards import simple_tests
 simple_tests()
